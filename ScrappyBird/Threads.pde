@@ -1,11 +1,13 @@
-//************************************************************
+//*************************************************************************
 //    Scrappy Bird Game
 //    
-//      Autores:
+//      Authors:
 //        Pablo Cazorla Martínez
 //        Javier Peces Chillarón
 //
-//***********************************************************
+//   NOTE: Processing 3+ Version (It may not work in another version)
+//
+//*************************************************************************
 
 class MyThread extends Thread
 {
@@ -25,7 +27,7 @@ class MyThread extends Thread
           
             case "GenColumns":
               if(columns.size() > 0){
-                 if(columns.get(columns.size()-1).getX() <= width - spaceBtwColumns){
+                 if(columns.get(columns.size()-1).getX() <= width*spaceBtwColumns){
                     columns.add(new Column(speed, narrow, setColWidth)); 
                     cleanArray();
                  }
@@ -35,13 +37,13 @@ class MyThread extends Thread
             
             case "CollisionSys":
               
-              // ************************************** Colision con el suelo ************************************************ \\
+              // ****************************************** Ground collision ************************************************** \\
               if(((player.getY()+player.getSize()/2) > ground_l))
               {
                 state = 2; // GAME OVER
               }       
       
-              // ************************************* Colision con las tuberias ********************************************** \\
+              // ****************************************** Pipes collision *************************************************** \\
          
               for(int i = 0; i < columns.size(); ++i)
               {
@@ -60,7 +62,7 @@ class MyThread extends Thread
               delay(10);
               break;
            
-            // Points System in progress
+       // Points System in progress
             //case "PointSys":
               
             //  break;

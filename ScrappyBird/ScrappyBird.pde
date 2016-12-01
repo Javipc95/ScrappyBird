@@ -1,19 +1,22 @@
-//************************************************************
+//*************************************************************************
 //    Scrappy Bird Game
 //    
-//      Autores:
+//      Authors:
 //        Pablo Cazorla Martínez
 //        Javier Peces Chillarón
 //
-//***********************************************************
+//   NOTE: Processing 3+ Version (It may not work in another version)
+//
+//*************************************************************************
 
 import processing.serial.*;
-import java.lang.*;
 
 Bird player;
 ArrayList<Column> columns;
+
 Serial serialPort;
 String msg;
+String[] ports;
 
 MyThread genColumns, collisionSys; 
 
@@ -21,12 +24,15 @@ MyThread genColumns, collisionSys;
 
 PImage p_img, scene, ground;
 PFont bungeeFont, russoFont;
-int state;
+
+int state;  // Program state variable
 
 int c;
-int spaceBtwColumns = 600;
-int speed = 10;
-int points;
+
+float spaceBtwColumns = 0.55;     // Space Between colums in relation on the resolution of the screen
+int speed = 7;                    // Columns speed 
+int points;                       // Points System in progress
+
 float narrow = 0.27;
 float setColWidth = 0.08;
 
@@ -42,13 +48,14 @@ void setup()
    
   columns = new ArrayList<Column>();
   
+  ports = Serial.list();
   print("Puertos COM disponibles:\n" + "  ");
-  println(Serial.list());
+  println(ports);
   println();
   
-  if() //<>//
+  if(ports.length != 0)
   {
-    serialPort = new Serial(this, Serial.list()[0], 57600);
+    serialPort = new Serial(this, Serial.list()[0], 57600); //<>//
     serialPort.bufferUntil('\n');
   }
   
@@ -60,7 +67,7 @@ void setup()
   bungeeFont = createFont("Bungee.ttf",100);
   russoFont = createFont("RussoOne.ttf",17);
   
-  scene = loadImage("SM_Background.png");
+  scene = loadImage("scene.gif");
   scene.resize(width,height);
   
   ground = loadImage("ground.png");
@@ -72,8 +79,8 @@ void setup()
 
 void draw()
 {
-  background(200,200,255);
-  //background(scene); 
+  //background(200,200,255);
+  background(scene);
   
   c=0;
   for(int i=width/71; i>0; i--){
@@ -88,6 +95,18 @@ void draw()
       collisionSys.start();
       //pointSys.start(); // Points System in progress
       state = 0;
+      textFont(bungeeFont);
+      text("SCRAPPY BIRD",0.67*width,0.5*height);
+      textAlign(CENTER);
+      
+      break;
+    
+    case 0:
+      textFont(bungeeFont);
+      fill(193,46,46);
+      text("SCRAPPY BIRD",0.68*width,0.5*height);
+      
+      textAlign(CENTER);
       break;
     
     case 1:
@@ -113,9 +132,10 @@ void draw()
           columns.get(i).stop();
           
           textFont(bungeeFont);
+          fill(20);
           text("GAME OVER",0.5*width,0.35*height);
-          textAlign(CENTER);
-        }     
+          textAlign(CENTER);   
+        }
       }
 }
 

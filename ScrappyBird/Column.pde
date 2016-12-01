@@ -1,11 +1,13 @@
-//************************************************************
+//*************************************************************************
 //    Scrappy Bird Game
 //    
-//      Autores:
+//      Authors:
 //        Pablo Cazorla Martínez
 //        Javier Peces Chillarón
 //
-//***********************************************************
+//   NOTE: Processing 3+ Version (It may not work in another version)
+//
+//*************************************************************************
 
 class Column
 {
@@ -28,19 +30,13 @@ class Column
   
   void drawColumn()
   {
-     
      pushStyle();
      pushMatrix();
-     //rect(x, 0, colWidth, UpperHeight,0,0, 2*PI, 2*PI);
-     //rect(x, height, colWidth, LowerHeight, 2*PI, 2*PI, 0, 0);     
-     //image(imColumnDown, x, 0, colWidth, UpperHeight);
-     //image(imColumnUp, x, height, colWidth, LowerHeight);
      fill(0, 200, 0);
      rect(x-4, UpperHeight+(height*narrow)-20, colWidth+8, 20, 2*PI); //Parte superior columna inferior
      rect(x-4, UpperHeight, colWidth+8, 20, 2*PI); //Parte superior columna superior
      rect(x, 0, colWidth, UpperHeight,0,0, 2*PI, 2*PI);
      rect(x, height, colWidth, LowerHeight, 2*PI, 2*PI, 0, 0);
-     
      
      drawn = true;
      popStyle();
@@ -81,9 +77,10 @@ class Column
       return drawn;
   }
   
+  // Tell us if the pipe is in the zone where the player may hit i
   boolean inDangerZone(){
     boolean danger = false;
-    if((x <= 0.3*width+0.020*width) && (x + colWidth + (width*0.021) > 0.3*width+0.020*width)){
+    if((x <= 0.3*width+0.020*width) && (x + colWidth + (width*0.021) > 0.30*width+0.020*width)){
        danger = true; 
     } 
     return danger;
