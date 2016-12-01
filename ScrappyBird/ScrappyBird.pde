@@ -84,7 +84,7 @@ void draw()
       
       // ************************************* Colision con el suelo ************************************************** \\
       
-          if(((player.getY()) > ground_l))
+          if(((player.getY()+player.getSize()/2) > ground_l))
           {
             state = 2; // GAME OVER
           }
