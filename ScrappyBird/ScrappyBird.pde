@@ -6,9 +6,10 @@
   Asignatura:
 
 */
-
+import processing.serial.*;
 Bird player;
 ArrayList<Column> columns;
+Serial serialPort;
 
 MyThread genColumns, cleanArray;
 
@@ -34,6 +35,10 @@ void setup()
   ground_l = height-65;
   
   columns = new ArrayList<Column>();
+  
+  println(Serial.list());  
+  serialPort = new Serial(this, Serial.list()[1], 57600);
+  serialPort.bufferUntil('\n');
   
   genColumns = new MyThread("GenColumns");
   cleanArray = new MyThread("CleanArray");
@@ -124,7 +129,7 @@ void mousePressed()
       columns.add(new Column(speed, narrow, setColWidth)); 
       cleanArray.start();
       break;
-    case 1: player.hit(); break;
+    case 1: player.tap(); break;
     case 2: 
       state = 0;
       player.reset();
@@ -133,6 +138,29 @@ void mousePressed()
       break;
   }
   
+}
+
+void serialEvent(Serial myport) {
+  String str = myport.readStringUntil('\n');
+  if(float(str) >;
+  //println(dato);
+  
+  if(tap)
+    switch(state)
+    {
+      case 0: 
+        state = 1;
+        columns.add(new Column(speed, narrow, setColWidth)); 
+        cleanArray.start();
+        break;
+      case 1: player.tap(); break;
+      case 2: 
+        state = 0;
+        player.reset();
+        columns.clear();
+        player.drawIt();  
+        break;
+    }
 }
 
 class MyThread extends Thread
@@ -157,24 +185,22 @@ class MyThread extends Thread
               if(columns.size() > 0)
               {
                 if(columns.get(columns.size()-1).getX() <= width - spaceBtwColumns){
-                  columns.add(new Column(speed, narrow, setColWidth)); 
-                  System.out.println("Columnas creadas: " + ++count);
+                  columns.add(new Column(speed, narrow, setColWidth));              
                 }
               }
             }
+            
           case "CleanArray":
-            System.out.println("Limpieza");
             while(true){
               if(columns.size() > 0){
                  for(int i = 0; i < columns.size() && columns.get(i).getX() < -100; ++i){
-                    columns.remove(i);
-                    System.out.println("Columna borrada");
+                    columns.remove(i);                    
                  }
               }
             }
        }
      } catch(Exception e){
-        System.out.println("Error al runear " + threadName); 
+        System.out.println("Running error " + threadName); 
      }
     System.out.println("Thread " + threadName + " exiting.");
   }

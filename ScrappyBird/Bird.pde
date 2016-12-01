@@ -57,7 +57,7 @@ class Bird
     ay = 0.5;
   }
   
-  void hit()
+  void tap()
   {
     ay = -4;
     state = 1;
