@@ -68,7 +68,7 @@ class Column
   
   float getHeightLower()
   {
-    return (height - LowerHeight)-20;
+    return UpperHeight-(height*0.019) + (height*narrow);
   }
   
   float colWidth()
@@ -79,6 +79,14 @@ class Column
   boolean isDrawn()
   {
       return drawn;
+  }
+  
+  boolean inDangerZone(){
+    boolean danger = false;
+    if((x <= 0.3*width+0.020*width) && (x + colWidth + (width*0.021) > 0.3*width+0.020*width)){
+       danger = true; 
+    } 
+    return danger;
   }
   
 }

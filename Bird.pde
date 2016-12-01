@@ -32,7 +32,7 @@ class Bird
   
   float getY()
   {
-    return y+size/2;
+    return y;
   }
   float getSize()
   {

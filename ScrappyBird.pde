@@ -6,6 +6,8 @@
   Asignatura:
 
 */
+float up;
+float low;
 
 Bird player;
 ArrayList<Column> columns;
@@ -23,6 +25,7 @@ float narrow = 0.25;
 float setColWidth = 0.08;
 int count = 0;
 
+boolean ok; 
 
 float ground_l;
 float playerPos = 0.30*width;
@@ -65,7 +68,7 @@ void draw()
       genColumns.start();
       state = 0;
       break;
-    case 1: //<>//
+    case 1:
       player.update();
       for(int i = 0; i < columns.size(); ++i)
       {
@@ -82,7 +85,7 @@ void draw()
         state = 2; // GAME OVER
       }
       
-      // Colision con las tuberias
+       //Colision con las tuberias
       for(int i = 0; i < columns.size(); ++i)
       {
         //if(( ((columns.get(i).getX() + columns.get(i).colWidth()) >= (playerPos+player.getSize()/2)) || ((playerPos+player.getSize()/2) >= columns.get(i).getX()) )  
@@ -94,7 +97,21 @@ void draw()
         //{
         //  state = 2; // GAME OVER; 
         //}
+        if((columns.get(i).inDangerZone())) //Zona critica*width+0.020*width)){
+        {
+          up =player.getY() - columns.get(i).getHeightUpper();
+          low =columns.get(i).getHeightLower() - player.getY();
+          
+          if(((columns.get(i).getHeightLower() - player.getY()) < player.getSize()/2) || ((player.getY() - columns.get(i).getHeightUpper()) < player.getSize()/2) ){ //<>//
+            state = 2;
+          }
+          
+          if((player.getY() >= columns.get(i).getHeightLower()) || (player.getY() <= columns.get(i).getHeightUpper())){
+            state = 2;
+          }
+        }
       }
+      
       
       break;
       
