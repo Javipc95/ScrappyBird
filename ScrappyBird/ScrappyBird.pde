@@ -82,25 +82,32 @@ void draw()
         }
       }
       
-// Colision con el suelo 
-      if(((player.getY()) > ground_l))
-      {
-        state = 2; // GAME OVER
-      }
+      // ************************************* Colision con el suelo ************************************************** \\
       
-      // Colision con las tuberias
-      for(int i = 0; i < columns.size(); ++i)
-      {
-        //if(( ((columns.get(i).getX() + columns.get(i).colWidth()) >= (playerPos+player.getSize()/2)) || ((playerPos+player.getSize()/2) >= columns.get(i).getX()) )  
-        //    &&  ((player.getY() < columns.get(i).getHeightUpper()) || (player.getY() > columns.get(i).getHeightLower() ) ))
-        //{
-        //  state = 2; // GAME OVER; 
-        //}
-        //if(( ((columns.get(i).getX() + columns.get(i).colWidth()) >= (playerPos+player.getSize()/2)) || ((playerPos+player.getSize()/2) >= columns.get(i).getX()) )  )
-        //{
-        //  state = 2; // GAME OVER; 
-        //}
-      }
+          if(((player.getY()) > ground_l))
+          {
+            state = 2; // GAME OVER
+          }
+     
+      // ************************************************************************************************************** \\
+      
+      
+      // ************************************* Colision con las tuberias ********************************************** \\
+         
+          for(int i = 0; i < columns.size(); ++i)
+          {
+            //if(( ((columns.get(i).getX() + columns.get(i).colWidth()) >= (playerPos+player.getSize()/2)) || ((playerPos+player.getSize()/2) >= columns.get(i).getX()) )  
+            //    &&  ((player.getY() < columns.get(i).getHeightUpper()) || (player.getY() > columns.get(i).getHeightLower() ) ))
+            //{
+            //  state = 2; // GAME OVER; 
+            //}
+            //if(( ((columns.get(i).getX() + columns.get(i).colWidth()) >= (playerPos+player.getSize()/2)) || ((playerPos+player.getSize()/2) >= columns.get(i).getX()) )  )
+            //{
+            //  state = 2; // GAME OVER; 
+            //}
+          }
+          
+      // ************************************************************************************************************** \\
       
       break;
       
@@ -141,7 +148,6 @@ void mousePressed()
       player.drawIt();  
       break;
   }
-  
 }
 
 void serialEvent(Serial myport) {
