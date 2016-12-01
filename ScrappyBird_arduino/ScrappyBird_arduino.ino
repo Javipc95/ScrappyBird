@@ -21,7 +21,7 @@ void loop() {
 
   //Serial.println(tapValue);
 
-  if(tapValue > 140 && !sample) {
+  if(tapValue > 110 && !sample) {
     sample = true;
     Serial.println("1"); 
     
