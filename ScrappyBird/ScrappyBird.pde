@@ -8,12 +8,16 @@
 //***********************************************************
 
 import processing.serial.*;
+import java.lang.*;
+
 Bird player;
 ArrayList<Column> columns;
 Serial serialPort;
 String msg;
 
-MyThread genColumns, collisionSys, pointSys;
+MyThread genColumns, collisionSys; 
+
+//MyThread pointSys; // Points System in progress
 
 PImage p_img, scene, ground;
 PFont bungeeFont, russoFont;
@@ -35,18 +39,23 @@ void setup()
   
   state = -1;
   ground_l = height-65;
-  
+   
   columns = new ArrayList<Column>();
   
   print("Puertos COM disponibles:\n" + "  ");
   println(Serial.list());
   println();
-  serialPort = new Serial(this, Serial.list()[0], 57600);
-  serialPort.bufferUntil('\n');
+  
+  if() //<>//
+  {
+    serialPort = new Serial(this, Serial.list()[0], 57600);
+    serialPort.bufferUntil('\n');
+  }
   
   genColumns = new MyThread("GenColumns");
   collisionSys = new MyThread("CollisionSys");
-  pointSys = new MyThread("PointSys");
+  
+  //pointSys = new MyThread("PointSys"); // Points System in progress
    
   bungeeFont = createFont("Bungee.ttf",100);
   russoFont = createFont("RussoOne.ttf",17);
@@ -77,7 +86,7 @@ void draw()
     case -1:
       genColumns.start();
       collisionSys.start();
-      pointSys.start();
+      //pointSys.start(); // Points System in progress
       state = 0;
       break;
     
@@ -91,7 +100,6 @@ void draw()
           columns.get(i).drawColumn();
         }
       } 
-      drawPoints();
       break;    
   }
 
@@ -106,9 +114,7 @@ void draw()
           
           textFont(bungeeFont);
           text("GAME OVER",0.5*width,0.35*height);
-          drawMarker();
           textAlign(CENTER);
-          drawPoints();
         }     
       }
 }
@@ -166,15 +172,18 @@ void cleanArray(){
   }
 }
 
-void drawPoints()
-{
-  points = 2;
-  textFont(russoFont);
-  text("Points:" + str(points),0.02*width,0.02*height);
-}
 
-void drawMarker()
-{
-  rect(0.5*width-0.2*width/2,0.4*height, 0.2*width,0.2*height,40);
-  
-}
+
+// Points System in progress
+
+//void drawPoints()
+//{
+//  points = 2;
+//  textFont(russoFont);
+//  text("Points:" + str(points),0.02*width,0.02*height);
+//}
+
+//void drawMarker()
+//{
+//  rect(0.5*width-0.2*width/2,0.4*height, 0.2*width,0.2*height,40);
+//}

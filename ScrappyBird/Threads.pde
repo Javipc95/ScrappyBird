@@ -60,9 +60,10 @@ class MyThread extends Thread
               delay(10);
               break;
            
-            case "PointSys":
+            // Points System in progress
+            //case "PointSys":
               
-              break;
+            //  break;
           }
         }
      } catch(Exception e){
