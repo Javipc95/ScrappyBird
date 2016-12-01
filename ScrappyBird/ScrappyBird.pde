@@ -7,22 +7,22 @@
 
 */
 
+import processing.serial.*;
 Bird player;
 ArrayList<Column> columns;
+Serial serialPort;
+String msg;
 
 MyThread genColumns;
 
 PImage p_img, scene, ground;
 int state;
-boolean isBusy = false;
 
 int c;
 int spaceBtwColumns = 600;
 int speed = 10;
 float narrow = 0.25;
 float setColWidth = 0.08;
-int count = 0;
-
 
 float ground_l;
 float playerPos = 0.30*width;
@@ -35,6 +35,12 @@ void setup()
   ground_l = height-65;
   
   columns = new ArrayList<Column>();
+  
+  print("Puertos COM disponibles:\n" + "  ");
+  println(Serial.list());
+  println();
+  serialPort = new Serial(this, Serial.list()[0], 57600);
+  serialPort.bufferUntil('\n');
   
   genColumns = new MyThread("GenColumns");
   
@@ -123,7 +129,11 @@ void mousePressed()
       state = 1;
       columns.add(new Column(speed, narrow, setColWidth)); 
       break;
-    case 1: player.hit(); break;
+    
+    case 1: 
+      player.tap(); 
+      break;
+    
     case 2: 
       state = 0;
       player.reset();
@@ -134,44 +144,33 @@ void mousePressed()
   
 }
 
+void serialEvent(Serial myport) {
+  msg = myport.readStringUntil('\n');
+  
+  if(float(msg) == 1){ 
+    switch(state)
+    {
+      case 0: 
+        state = 1;
+        columns.add(new Column(speed, narrow, setColWidth)); 
+        break;
+        
+      case 1: 
+        player.tap(); 
+        break;
+        
+      case 2: 
+        state = 0;
+        player.reset();
+        columns.clear();
+        player.drawIt();  
+        break;
+    }
+  }
+}
+
 void cleanArray(){
   for(int i = 0; i < columns.size() && columns.get(i).getX() < -width*setColWidth; ++i){
      columns.remove(0);
   }
 }
-
-class MyThread extends Thread
-{
-  private Thread t;
-  private String threadName;
-  
-  MyThread (String name) {
-    threadName = name; 
-    System.out.println("Creado " + threadName);
-  }
-  public void run()
-  {
-     try{
-        while(true)
-        {
-           if(columns.size() > 0){
-             if(columns.get(columns.size()-1).getX() <= width - spaceBtwColumns){
-                columns.add(new Column(speed, narrow, setColWidth)); 
-                cleanArray();
-             }
-           }
-           delay(10);
-         }
-     } catch(Exception e){
-        System.out.println("Error al runear " + threadName); 
-     }
-    System.out.println("Thread " + threadName + " termina su ejecucion.");
-  }
-  public void start() {
-    System.out.println("Comienza " + threadName);
-    if(t == null){
-       t = new Thread (this, threadName);
-       t.start();
-    }
-  }
-} //<>//
