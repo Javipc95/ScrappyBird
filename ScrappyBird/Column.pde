@@ -1,4 +1,4 @@
-/* Clase para crear los obstáculo a evitar por flappy bird
+/*
   Autores:
 
   Fecha:
@@ -88,5 +88,4 @@ class Column
     } 
     return danger;
   }
-  
 }
