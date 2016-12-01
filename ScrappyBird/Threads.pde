@@ -1,3 +1,12 @@
+//************************************************************
+//    Scrappy Bird Game
+//    
+//      Autores:
+//        Pablo Cazorla Martínez
+//        Javier Peces Chillarón
+//
+//***********************************************************
+
 class MyThread extends Thread
 {
   private Thread t;
@@ -52,6 +61,7 @@ class MyThread extends Thread
               break;
            
             case "PointSys":
+              
               break;
           }
         }

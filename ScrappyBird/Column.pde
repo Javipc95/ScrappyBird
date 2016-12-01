@@ -1,11 +1,11 @@
-/*
-  Autores:
-
-  Fecha:
-  
-  Asignatura:
-
-*/
+//************************************************************
+//    Scrappy Bird Game
+//    
+//      Autores:
+//        Pablo Cazorla Martínez
+//        Javier Peces Chillarón
+//
+//***********************************************************
 
 class Column
 {

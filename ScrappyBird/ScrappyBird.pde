@@ -1,11 +1,11 @@
-/* 
-  Autores:
-
-  Fecha:
-  
-  Asignatura:
-
-*/
+//************************************************************
+//    Scrappy Bird Game
+//    
+//      Autores:
+//        Pablo Cazorla Martínez
+//        Javier Peces Chillarón
+//
+//***********************************************************
 
 import processing.serial.*;
 Bird player;
@@ -16,13 +16,14 @@ String msg;
 MyThread genColumns, collisionSys, pointSys;
 
 PImage p_img, scene, ground;
-PFont bungeeFont;
+PFont bungeeFont, russoFont;
 int state;
 
 int c;
 int spaceBtwColumns = 600;
 int speed = 10;
-float narrow = 0.25;
+int points;
+float narrow = 0.27;
 float setColWidth = 0.08;
 
 float ground_l;
@@ -48,6 +49,7 @@ void setup()
   pointSys = new MyThread("PointSys");
    
   bungeeFont = createFont("Bungee.ttf",100);
+  russoFont = createFont("RussoOne.ttf",17);
   
   scene = loadImage("SM_Background.png");
   scene.resize(width,height);
@@ -79,7 +81,7 @@ void draw()
       state = 0;
       break;
     
-    case 1: //<>//
+    case 1:
       player.update();
       for(int i = 0; i < columns.size(); ++i)
       {
@@ -89,6 +91,7 @@ void draw()
           columns.get(i).drawColumn();
         }
       } 
+      drawPoints();
       break;    
   }
 
@@ -102,8 +105,10 @@ void draw()
           columns.get(i).stop();
           
           textFont(bungeeFont);
-          text("GAME OVER",0.5*width,0.5*height);
+          text("GAME OVER",0.5*width,0.35*height);
+          drawMarker();
           textAlign(CENTER);
+          drawPoints();
         }     
       }
 }
@@ -149,7 +154,7 @@ void serialEvent(Serial myport) {
         state = 0;
         player.reset();
         columns.clear();
-        player.drawIt();  
+        player.drawIt();
         break;
     }
   }
@@ -159,4 +164,17 @@ void cleanArray(){
   for(int i = 0; i < columns.size() && columns.get(i).getX() < -width*setColWidth; ++i){
      columns.remove(0);
   }
+}
+
+void drawPoints()
+{
+  points = 2;
+  textFont(russoFont);
+  text("Points:" + str(points),0.02*width,0.02*height);
+}
+
+void drawMarker()
+{
+  rect(0.5*width-0.2*width/2,0.4*height, 0.2*width,0.2*height,40);
+  
 }
