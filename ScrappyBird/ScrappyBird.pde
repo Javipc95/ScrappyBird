@@ -13,9 +13,10 @@ ArrayList<Column> columns;
 Serial serialPort;
 String msg;
 
-MyThread genColumns;
+MyThread genColumns, collisionSys, pointSys;
 
 PImage p_img, scene, ground;
+PFont bungeeFont;
 int state;
 
 int c;
@@ -43,6 +44,10 @@ void setup()
   serialPort.bufferUntil('\n');
   
   genColumns = new MyThread("GenColumns");
+  collisionSys = new MyThread("CollisionSys");
+  pointSys = new MyThread("PointSys");
+   
+  bungeeFont = createFont("Bungee.ttf",100);
   
   scene = loadImage("SM_Background.png");
   scene.resize(width,height);
@@ -69,8 +74,11 @@ void draw()
   {
     case -1:
       genColumns.start();
+      collisionSys.start();
+      pointSys.start();
       state = 0;
       break;
+    
     case 1: //<>//
       player.update();
       for(int i = 0; i < columns.size(); ++i)
@@ -80,53 +88,23 @@ void draw()
         {
           columns.get(i).drawColumn();
         }
-      }
-      
-      // ************************************* Colision con el suelo ************************************************** \\
-      
-          if(((player.getY()+player.getSize()/2) > ground_l))
-          {
-            state = 2; // GAME OVER
-          }
-     
-      // ************************************************************************************************************** \\
-      
-      
-      // ************************************* Colision con las tuberias ********************************************** \\
-         
-          for(int i = 0; i < columns.size(); ++i)
-          {
-            if((columns.get(i).inDangerZone())) //Zona critica*width+0.020*width)){
-            {
-        
-              if(((columns.get(i).getHeightLower() - player.getY()) < player.getSize()/2) || ((player.getY() - columns.get(i).getHeightUpper()) < player.getSize()/2) ){
-                state = 2;
-              }
-              
-              if((player.getY() >= columns.get(i).getHeightLower()) || (player.getY() <= columns.get(i).getHeightUpper())){
-                state = 2;
-              }
-            }
-          }
-          
-      // ************************************************************************************************************** \\
-      
-      break;
-      
-    case 2:
-      textSize(40);
-      text("GAME OVER",0.5*width,0.5*height);
-      textAlign(CENTER);
-      
-      break;
+      } 
+      break;    
   }
 
   player.drawIt();
     
     for(int i = 0; i < columns.size(); ++i)
       {
-        if(state == 2) columns.get(i).stop();
         columns.get(i).drawColumn();
+        
+        if(state == 2){
+          columns.get(i).stop();
+          
+          textFont(bungeeFont);
+          text("GAME OVER",0.5*width,0.5*height);
+          textAlign(CENTER);
+        }     
       }
 }
 
