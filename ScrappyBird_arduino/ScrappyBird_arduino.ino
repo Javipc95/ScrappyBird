@@ -21,11 +21,13 @@ void loop() {
 
   //Serial.println(tapValue);
 
-  if(tapValue > 20 && !sample) {
+  if(tapValue > 140 && !sample) {
     sample = true;
     Serial.println("1"); 
+    
   
   }else {
-    if(tapValue < 20) sample = false;
+    if(tapValue < 5) sample = false;
+    delay(10);
   }
 }
