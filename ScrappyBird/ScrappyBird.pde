@@ -10,6 +10,8 @@ import processing.serial.*;
 Bird player;
 ArrayList<Column> columns;
 Serial serialPort;
+String msg;
+boolean ok;
 
 MyThread genColumns, cleanArray;
 
@@ -37,7 +39,7 @@ void setup()
   columns = new ArrayList<Column>();
   
   println(Serial.list());  
-  serialPort = new Serial(this, Serial.list()[1], 57600);
+  serialPort = new Serial(this, Serial.list()[0], 57600);
   serialPort.bufferUntil('\n');
   
   genColumns = new MyThread("GenColumns");
@@ -141,11 +143,11 @@ void mousePressed()
 }
 
 void serialEvent(Serial myport) {
-  String str = myport.readStringUntil('\n');
-  if(float(str) >;
-  //println(dato);
+  String msg = myport.readStringUntil('\n');
   
-  if(tap)
+   ok = msg == "tap";
+  
+  if(msg == "tap"){
     switch(state)
     {
       case 0: 
@@ -161,6 +163,7 @@ void serialEvent(Serial myport) {
         player.drawIt();  
         break;
     }
+  }
 }
 
 class MyThread extends Thread
