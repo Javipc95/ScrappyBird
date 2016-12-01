@@ -10,13 +10,14 @@
 Bird player;
 ArrayList<Column> columns;
 
-MyThread genColumns, cleanArray;
+MyThread genColumns;
 
 PImage p_img, scene, ground;
 int state;
+boolean isBusy = false;
 
 int c;
-int spaceBtwColumns = 700;
+int spaceBtwColumns = 600;
 int speed = 10;
 float narrow = 0.25;
 float setColWidth = 0.08;
@@ -36,7 +37,6 @@ void setup()
   columns = new ArrayList<Column>();
   
   genColumns = new MyThread("GenColumns");
-  cleanArray = new MyThread("CleanArray");
   
   scene = loadImage("SM_Background.png");
   scene.resize(width,height);
@@ -122,7 +122,6 @@ void mousePressed()
     case 0: 
       state = 1;
       columns.add(new Column(speed, narrow, setColWidth)); 
-      cleanArray.start();
       break;
     case 1: player.hit(); break;
     case 2: 
@@ -133,6 +132,12 @@ void mousePressed()
       break;
   }
   
+}
+
+void cleanArray(){
+  for(int i = 0; i < columns.size() && columns.get(i).getX() < -width*setColWidth; ++i){
+     columns.remove(0);
+  }
 }
 
 class MyThread extends Thread
@@ -147,36 +152,20 @@ class MyThread extends Thread
   public void run()
   {
      try{
-       switch(threadName)
-       {
-         case "GenColumns":
-            
-            while(true)
-            {
-              delay(5);
-              if(columns.size() > 0)
-              {
-                if(columns.get(columns.size()-1).getX() <= width - spaceBtwColumns){
-                  columns.add(new Column(speed, narrow, setColWidth)); 
-                  System.out.println("Columnas creadas: " + ++count);
-                }
-              }
-            }
-          case "CleanArray":
-            System.out.println("Limpieza");
-            while(true){
-              if(columns.size() > 0){
-                 for(int i = 0; i < columns.size() && columns.get(i).getX() < -100; ++i){
-                    columns.remove(i);
-                    System.out.println("Columna borrada");
-                 }
-              }
-            }
-       }
+        while(true)
+        {
+           if(columns.size() > 0){
+             if(columns.get(columns.size()-1).getX() <= width - spaceBtwColumns){
+                columns.add(new Column(speed, narrow, setColWidth)); 
+                cleanArray();
+             }
+           }
+           delay(10);
+         }
      } catch(Exception e){
         System.out.println("Error al runear " + threadName); 
      }
-    System.out.println("Thread " + threadName + " exiting.");
+    System.out.println("Thread " + threadName + " termina su ejecucion.");
   }
   public void start() {
     System.out.println("Comienza " + threadName);
