@@ -11,7 +11,6 @@ Bird player;
 ArrayList<Column> columns;
 Serial serialPort;
 String msg;
-boolean ok;
 
 MyThread genColumns, cleanArray;
 
@@ -23,8 +22,6 @@ int spaceBtwColumns = 700;
 int speed = 10;
 float narrow = 0.25;
 float setColWidth = 0.08;
-int count = 0;
-
 
 float ground_l;
 float playerPos = 0.30*width;
@@ -143,11 +140,9 @@ void mousePressed()
 }
 
 void serialEvent(Serial myport) {
-  String msg = myport.readStringUntil('\n');
+  msg = myport.readStringUntil('\n');
   
-   ok = msg == "tap";
-  
-  if(msg == "tap"){
+  if(float(msg) == 1){ //<>//
     switch(state)
     {
       case 0: 
