@@ -1,0 +1,88 @@
+//*************************************************************************
+//    Scrappy Bird Game with music.
+//    
+//      Authors:
+//        Pablo Cazorla Martínez
+//        Javier Peces Chillarón
+//
+//   NOTE: Processing 3+ Version (It may not work in another version)
+//
+//*************************************************************************
+
+class Column
+{
+  float UpperHeight, colWidth, x, vx, ax; //vx: Marca la velocidad a la que avanzan las columnas por el lienzo.
+  float LowerHeight, DownHeight;
+  float narrow; //[0, 1] Marca la distancia vertical entre los tubos del juego.
+  boolean drawn = false;
+  float setColWidth;
+  
+  Column(float _vx, float _narrow, float _setColWidth) //Los parametros vx y narrow estan asociado a la
+  {                                                                          //dificultad del juego.
+    setColWidth = _setColWidth;
+    UpperHeight = random(200, height*0.6);
+    colWidth =  width*setColWidth;
+    x = width;
+    vx = _vx; // Puede servir para modificar la dificultad del juego.
+    narrow = _narrow;
+    LowerHeight = -(height - UpperHeight)+height*narrow;
+  }
+  
+  void drawColumn()
+  {
+     pushStyle();
+     pushMatrix();
+     fill(0, 200, 0);
+     rect(x-4, UpperHeight+(height*narrow)-20, colWidth+8, 20, 2*PI); //Parte superior columna inferior
+     rect(x-4, UpperHeight, colWidth+8, 20, 2*PI); //Parte superior columna superior
+     rect(x, 0, colWidth, UpperHeight,0,0, 2*PI, 2*PI);
+     rect(x, height, colWidth, LowerHeight, 2*PI, 2*PI, 0, 0);
+     
+     drawn = true;
+     popStyle();
+     popMatrix();
+  }
+  
+  void update()
+  {
+     x -= vx; 
+  }
+  void stop()
+  {
+    vx = 0;
+  }
+  
+  float getX()
+  {
+    return x;
+  }
+  
+  float getHeightUpper()
+  {
+     return UpperHeight+20; 
+  }
+  
+  float getHeightLower()
+  {
+    return UpperHeight-(height*0.019) + (height*narrow);
+  }
+  
+  float colWidth()
+  {
+    return colWidth;
+  }
+  
+  boolean isDrawn()
+  {
+      return drawn;
+  }
+  
+  // Tell us if the pipe is in the zone where the player may hit i
+  boolean inDangerZone(){
+    boolean danger = false;
+    if((x <= 0.3*width+0.020*width) && (x + colWidth + (width*0.021) > 0.30*width+0.020*width)){
+       danger = true; 
+    } 
+    return danger;
+  }
+}
