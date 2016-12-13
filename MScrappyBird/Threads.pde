@@ -62,10 +62,23 @@ class MyThread extends Thread
               delay(10);
               break;
            
-       // Points System in progress
-            //case "PointSys":
-              
-            //  break;
+            case "PointSys":
+              for(int i = 0; i < columns.size(); ++i)
+              {
+                if((columns.get(i).inDangerZone() && pflag == 0)) //Zona critica*width+0.020*width)){
+                {
+                  pflag = 1;    //<>//
+                  p = i;
+                }
+
+                if(!columns.get(p).inDangerZone() && pflag == 1) //<>//
+                {
+                  pflag = 0;
+                  points += 1;
+                }
+              }
+              delay(10);
+              break;
           }
         }
      } catch(Exception e){

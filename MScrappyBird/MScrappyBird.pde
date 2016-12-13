@@ -18,9 +18,7 @@ Serial serialPort;
 String msg;
 String[] ports;
 
-MyThread genColumns, collisionSys; 
-
-//MyThread pointSys; // Points System in progress
+MyThread genColumns, collisionSys, pointSys; 
 
 PImage p_img, scene, ground;
 PFont bungeeFont, russoFont;
@@ -31,7 +29,9 @@ int c;
 
 float spaceBtwColumns = 0.55;     // Space Between colums in relation on the resolution of the screen
 int speed = 7;                    // Columns speed 
-int points;                       // Points System in progress
+int points;  
+int pflag = 0, sflag = 0;
+int p;
 
 float narrow = 0.27;
 float setColWidth = 0.08;
@@ -61,8 +61,7 @@ void setup()
   
   genColumns = new MyThread("GenColumns");
   collisionSys = new MyThread("CollisionSys");
-  
-  //pointSys = new MyThread("PointSys"); // Points System in progress
+  pointSys = new MyThread("PointSys"); 
    
   bungeeFont = createFont("Bungee.ttf",100);
   russoFont = createFont("RussoOne.ttf",17);
@@ -93,7 +92,7 @@ void draw()
     case -1:
       genColumns.start();
       collisionSys.start();
-      //pointSys.start(); // Points System in progress
+      pointSys.start(); 
       state = 0;
       textFont(bungeeFont);
       text("SCRAPPY BIRD",0.67*width,0.5*height);
@@ -121,22 +120,28 @@ void draw()
       } 
       break;    
   }
-
+  drawPoints();
   player.drawIt();
+  
+  if(points == 5 && ports.length != 0 && sflag == 0)
+  {
+    serialPort.write("1"); // increase music velocity
+    sflag = 1;
+  }
     
-    for(int i = 0; i < columns.size(); ++i)
-      {
-        columns.get(i).drawColumn();
-        
-        if(state == 2){
-          columns.get(i).stop();
+  for(int i = 0; i < columns.size(); ++i)
+    {
+      columns.get(i).drawColumn();
+       
+      if(state == 2){
+        columns.get(i).stop();
           
-          textFont(bungeeFont);
-          fill(20);
-          text("GAME OVER",0.5*width,0.35*height);
-          textAlign(CENTER);   
-        }
+        textFont(bungeeFont);
+        fill(20);
+        text("GAME OVER",0.5*width,0.35*height);
+        textAlign(CENTER);   
       }
+    }
 }
 
 void mousePressed()
@@ -154,6 +159,7 @@ void mousePressed()
     
     case 2: 
       state = 0;
+      pointSysReset();
       player.reset();
       columns.clear();
       player.drawIt();  
@@ -161,30 +167,56 @@ void mousePressed()
   }
 }
 
-void serialEvent(Serial myport) {
-  msg = myport.readStringUntil('\n');
-  
-  if(float(msg) == 1){ 
+void keyPressed()
+{
+  if(key == ' '){
     switch(state)
     {
       case 0: 
         state = 1;
         columns.add(new Column(speed, narrow, setColWidth)); 
         break;
-        
+      
       case 1: 
         player.tap(); 
         break;
-        
+      
       case 2: 
         state = 0;
+        pointSysReset();
         player.reset();
         columns.clear();
-        player.drawIt();
+        player.drawIt();  
         break;
     }
   }
 }
+
+
+//void serialEvent(Serial myport) {
+//  msg = myport.readStringUntil('\n');
+  
+//  if(float(msg) == 1){ 
+//    switch(state)
+//    {
+//      case 0: 
+//        state = 1;
+//        columns.add(new Column(speed, narrow, setColWidth)); 
+//        break;
+        
+//      case 1: 
+//        player.tap(); 
+//        break;
+        
+//      case 2: 
+//        state = 0;
+//        player.reset();
+//        columns.clear();
+//        player.drawIt();
+//        break;
+//    }
+//  }
+//}
 
 void cleanArray(){
   for(int i = 0; i < columns.size() && columns.get(i).getX() < -width*setColWidth; ++i){
@@ -193,15 +225,26 @@ void cleanArray(){
 }
 
 
-
 // Points System in progress
 
-//void drawPoints()
-//{
-//  points = 2;
-//  textFont(russoFont);
-//  text("Points:" + str(points),0.02*width,0.02*height);
-//}
+void drawPoints()
+{
+  textFont(russoFont);
+  text("Points: " + str(points),0.03*width,0.03*height);
+}
+
+void pointSysReset()
+{
+  points = 0;
+  pflag = 0;
+  sflag = 0;
+  p = 0;
+  
+  if(ports.length != 0)
+  {
+    serialPort.write("0"); // GAME OVER -- play game over music from arduino
+  }
+}
 
 //void drawMarker()
 //{
